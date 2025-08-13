@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,10 @@ public class BoardManager : MonoBehaviour
     int completedRowCount;
 
     ScoreManager scoreManager;
+
+    [SerializeField] ParticleManager[] particleManager=new ParticleManager[4];
+    // int[] copmlatedRowsPositions=new int[4];
+
 
     private void Awake()
     {
@@ -142,18 +147,30 @@ public class BoardManager : MonoBehaviour
 
 
     // þekiller yerleþtikten sonra tüm grid doluluk durumu kontrol ediliyor
-    public void CleanAllRows()
+    public IEnumerator CleanAllRows()
     {
         completedRowCount = 0;
+
+        for (int y = 0; y < height; ++y)
+        {
+            if (IsRowFull(y)) // eðer satýr dolu ise 
+            {
+
+                PlayComplatedRowsVfxs(completedRowCount, y); // tamamlanan satýrýn efekti oynatýlýr
+                completedRowCount++; // çalýþcak efekt indexi olarak kullanýlacaðý için efekt çalýþtýktan sonra yükseltiliyor 
+                yield return new WaitForSeconds(0.15f); // vfx ler sýrayla oynamasý için
+
+            }
+        }
 
         for (int y = 0; y < height; y++)
         {
             if (IsRowFull(y)) // eðer satýr dolu ise 
-            {
+            {              
                 CleanTheFulledRow(y); // dolu satýr temizlenir
                 MoveDownAllRows(y + 1); // tüm satýrlar bir satýr aþþaðý kaydýrýlýr
                 y--; // satýr güncellemesinden dolayý tekrar ayný satýr kontrol edilmeli yoksa 1 satýr atlanýlýr 
-                completedRowCount++;
+                
             }
         }
 
@@ -168,7 +185,7 @@ public class BoardManager : MonoBehaviour
             scoreManager.ScoreCounter(completedRowCount);
         }
 
-        
+        yield return new WaitForSeconds(0.1f );
 
     }
 
@@ -203,5 +220,17 @@ public class BoardManager : MonoBehaviour
     Vector2 MakePositionRound(Vector2 shapePos) // deðerleri int deðerlere yuvarlar
     {
         return new Vector2(Mathf.Round(shapePos.x), Mathf.Round(shapePos.y));
+    }
+
+    void PlayComplatedRowsVfxs(int compRowCount,int y)
+    {
+        //if (particleManager)
+        //{
+        //    particleManager.transform.position = new Vector3(0, y, 0); // vfx leri tamamlanan satýra getiriyor
+        //    particleManager.PlayEffects();
+        //}
+
+        particleManager[completedRowCount].transform.position = new Vector3(0, y, 0); // vfx leri tamamlanan satýra getiriyor
+        particleManager[completedRowCount].PlayEffects();
     }
 }

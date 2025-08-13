@@ -43,7 +43,7 @@ public class IntroManager : MonoBehaviour
             countdownTexts[counter].GetComponent<CanvasGroup>().DOFade(1, 0.7f);
             countdownTexts[counter].GetComponent<RectTransform>().DOScale(2f, 0.3f).SetEase(Ease.InBounce).OnComplete(() =>
             { countdownTexts[counter].GetComponent<RectTransform>().DOScale(1.5f, 0.3f).SetEase(Ease.InBack); });
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
 
             countdownTexts[counter].GetComponent<RectTransform>().DOLocalMoveY(250, 0.7f);
             countdownTexts[counter].GetComponent<CanvasGroup>().DOFade(0, 0.7f);

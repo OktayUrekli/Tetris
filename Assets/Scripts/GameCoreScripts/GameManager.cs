@@ -44,6 +44,11 @@ public class GameManager : MonoBehaviour
         shadowShape = FindObjectOfType<ShadowShape>();
     }
 
+
+    private void Start()
+    {
+        StartGame();
+    }
     public void StartGame()
     {
         if (spawnerManager)
@@ -163,7 +168,7 @@ public class GameManager : MonoBehaviour
         if (shadowShape)
             shadowShape.ResetShadow();
 
-        boardManager.CleanAllRows(); // þekil yerleþtikten sonra grid karelerinin doluluk durumuna göre silme iþlemi kntrolü yapýlacak
+        StartCoroutine(boardManager.CleanAllRows()); // þekil yerleþtikten sonra grid karelerinin doluluk durumuna göre silme iþlemi kntrolü yapýlacak
 
         // diðer þekilin gidecek bir yeri kalmadýðý için yeni bir þekil oluþturuluyor.
         activeShape = spawnerManager.CreateNextShape();
