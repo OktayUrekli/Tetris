@@ -157,6 +157,8 @@ public class GameManager : MonoBehaviour
     {
         PlaySfx(5); // yerleþme sfx index=5
 
+        activeShape.PlaySettleEffects(); // yerleþme efektleri oynatýlýyor
+
         // deðerler yeni þekili yönlendirmek için bir nevi sýfýrlanýyor.
         rightLeftKeyCounter=Time.time;
         downKeyCounter=Time.time;

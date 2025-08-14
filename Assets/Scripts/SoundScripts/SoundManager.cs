@@ -33,6 +33,8 @@ public class SoundManager : MonoBehaviour
     private void Start()
     {
         UpdateMusicState();
+        SetSfxLevels();
+        SetMusicLevels();
     }
 
 
@@ -94,5 +96,42 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    
+    public void SetMusicLevels()
+    {
+        if (PlayerPrefs.HasKey("MusicLevel"))
+        {
+            musicAudioSource.volume = PlayerPrefs.GetFloat("MusicLevel");
+        }
+        else
+        {
+            PlayerPrefs.SetFloat("MusicLevel", 1);
+            musicAudioSource.volume = PlayerPrefs.GetFloat("MusicLevel");
+        }
+    }
+
+    public void SetSfxLevels()
+    {
+
+        if (PlayerPrefs.HasKey("SfxLevel"))
+        {
+            vocalsAudioSource.volume = PlayerPrefs.GetFloat("SfxLevel");
+
+            foreach (AudioSource source in sfxAudioSources)
+            {
+                source.volume = PlayerPrefs.GetFloat("SfxLevel");
+            }
+        }
+        else
+        {
+            PlayerPrefs.SetFloat("SfxLevel", 1);
+            vocalsAudioSource.volume = PlayerPrefs.GetFloat("SfxLevel");
+
+            foreach (AudioSource source in sfxAudioSources)
+            {
+                source.volume = PlayerPrefs.GetFloat("SfxLevel");
+            }
+        }
+    }
+
+
 }   
