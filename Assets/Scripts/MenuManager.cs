@@ -85,4 +85,9 @@ public class MenuManager : MonoBehaviour
         PlayerPrefs.SetFloat("SfxLevel", sfxSlider.value);
         FindAnyObjectByType<SoundManager>().SetSfxLevels();
     }
+
+    public void QuitGameButton()
+    {
+        Application.Quit();
+    }
 }

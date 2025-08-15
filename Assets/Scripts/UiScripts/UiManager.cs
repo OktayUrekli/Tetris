@@ -1,10 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.SocialPlatforms.Impl;
+
 
 public class UiManager : MonoBehaviour
 {
@@ -19,6 +18,11 @@ public class UiManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI lineTxt;
     [SerializeField] TextMeshProUGUI scoreTxt;
 
+    bool isMusicOn = true;
+    bool isSoundOn = true;
+    [SerializeField] IconController musicOnOfIcon;
+    [SerializeField] IconController sfxOnOffIcon;
+
     private void Awake()
     {
         gameManager=FindFirstObjectByType<GameManager>();
@@ -28,6 +32,12 @@ public class UiManager : MonoBehaviour
     {
         pausePanel.SetActive(isGamePaused);
         GameOverPanelOnOff(false);
+
+        if (FindAnyObjectByType<SoundManager>())
+        {
+            FindAnyObjectByType<SoundManager>().SetMusicLevels();
+            FindAnyObjectByType<SoundManager>().SetSfxLevels();
+        }
     }
 
     private void Update()
@@ -70,6 +80,12 @@ public class UiManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+    public void ReturnMenuButton()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(0);
+    }
+
     public void UpdateTexts(int score, int line, int level)
     {
         if (!scoreTxt || !lineTxt || !levelTxt)
@@ -81,6 +97,38 @@ public class UiManager : MonoBehaviour
 
     }
 
+    public void MusicOnOffButton()
+    {
+        isMusicOn = !isMusicOn;
+        UpdateMusicIcons(isMusicOn);
+
+        if (FindFirstObjectByType<SoundManager>())
+        {
+            FindFirstObjectByType<SoundManager>().isMusicOn=isMusicOn;
+            FindFirstObjectByType<SoundManager>().UpdateMusicState();
+        }
+    }
+
+    public void SfxOnOffButton()
+    {
+        isSoundOn = !isSoundOn;
+        UpdateSfxIcons(isSoundOn);
+        if (FindFirstObjectByType<SoundManager>())
+        {
+            FindFirstObjectByType<SoundManager>().isSoundOn=isSoundOn;
+        }
+        
+    }
+
+    public void UpdateMusicIcons(bool musicOnOffState)
+    {
+        musicOnOfIcon.UpdateIconState(musicOnOffState);
+    }
+
+    public void UpdateSfxIcons(bool sfxOnOffState)
+    {
+        sfxOnOffIcon.UpdateIconState(sfxOnOffState);
+    }
 
     void PlayButtonClickSfx()
     {

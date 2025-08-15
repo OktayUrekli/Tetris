@@ -8,17 +8,14 @@ public class SoundManager : MonoBehaviour
 
     [SerializeField] AudioSource musicAudioSource;
     [SerializeField] AudioClip[] musics;
-    bool isMusicOn=true;
+    public bool isMusicOn=true;
 
     [SerializeField] AudioSource vocalsAudioSource;
     [SerializeField] AudioClip[] vocals;
 
     [SerializeField] AudioSource[] sfxAudioSources;
-    bool isSoundOn=true;
+    public bool isSoundOn=true;
 
-
-    [SerializeField] IconController musicOnOfIcon;
-    [SerializeField] IconController sfxOnOffIcon;
  
     private void Awake()
     {
@@ -32,9 +29,9 @@ public class SoundManager : MonoBehaviour
 
     private void Start()
     {
-        UpdateMusicState();
         SetSfxLevels();
         SetMusicLevels();
+        UpdateMusicState();
     }
 
 
@@ -48,14 +45,8 @@ public class SoundManager : MonoBehaviour
         return vocals[Random.Range(0, vocals.Length)];
     }
 
-    public void MusicOnOffButton()
-    {
-        isMusicOn = !isMusicOn;
-        UpdateMusicState();
-        musicOnOfIcon.UpdateIconState(isMusicOn);
-    }
 
-    void UpdateMusicState()
+    public void UpdateMusicState()
     {
         if (musicAudioSource)
         {
@@ -71,11 +62,6 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void SoundOnOffButton()
-    {
-        isSoundOn = !isSoundOn;
-        sfxOnOffIcon.UpdateIconState(isSoundOn);
-    }
 
     public void PlaySfx(int sfxIndex)
     {
@@ -101,12 +87,29 @@ public class SoundManager : MonoBehaviour
         if (PlayerPrefs.HasKey("MusicLevel"))
         {
             musicAudioSource.volume = PlayerPrefs.GetFloat("MusicLevel");
+            if (PlayerPrefs.GetFloat("MusicLevel")==0)
+            {
+                isMusicOn = false;
+                if (FindAnyObjectByType<UiManager>())
+                {
+                    FindAnyObjectByType<UiManager>().UpdateMusicIcons(isMusicOn);
+                }
+            }
+            else
+            {
+                isMusicOn = true;
+            }
+
+                
         }
         else
         {
             PlayerPrefs.SetFloat("MusicLevel", 1);
             musicAudioSource.volume = PlayerPrefs.GetFloat("MusicLevel");
+            isMusicOn= true;
         }
+
+        
     }
 
     public void SetSfxLevels()
@@ -119,6 +122,15 @@ public class SoundManager : MonoBehaviour
             foreach (AudioSource source in sfxAudioSources)
             {
                 source.volume = PlayerPrefs.GetFloat("SfxLevel");
+            }
+
+            if (PlayerPrefs.GetFloat("SfxLevel") == 0)
+            {
+                isSoundOn = false;
+                if (FindAnyObjectByType<UiManager>())
+                {
+                    FindAnyObjectByType<UiManager>().UpdateSfxIcons(isSoundOn);
+                }
             }
         }
         else
